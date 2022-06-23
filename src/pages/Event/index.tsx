@@ -4,11 +4,13 @@ import Video from '../../components/Video';
 
 const EventPage = () => {
   return (
-    <>
+    <div className='flex flex-col min-h-screen'>
       <Header />
-      <Sidebar />
-      <Video />
-    </>
+      <main className='flex flex-1'>
+        <Video />
+        <Sidebar />
+      </main>      
+    </div>
   );
 };
 
