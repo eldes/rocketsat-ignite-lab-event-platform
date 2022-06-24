@@ -2,6 +2,7 @@ import { gql, useMutation } from '@apollo/client';
 import { Warning } from 'phosphor-react';
 import { FormEventHandler, FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import codeMockupImage from '../../assets/code-mockup.png';
 import Logo from '../../components/Logo';
 
 const CREATE_SUBSCRIBER_MUTATION = gql`
@@ -105,7 +106,7 @@ const SubscribePage: FunctionComponent = function () {
           </form>
         </div>
       </div>
-      <img src='/src/assets/code-mockup.png' alt='Code mockup' className='mt-10' />
+      <img src={codeMockupImage} alt='Code mockup' className='mt-10' />
     </div>
   );
 };
