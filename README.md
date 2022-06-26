@@ -2,7 +2,7 @@
 
 Projeto desenvolvido durante o workshop Ignite Lab, da Rocketseat, implementando, em ReactJS, uma plataforma de conteúdos em vídeo.
 
-https://ignite-lab-eldes.netlify.app
+https://ignite-lab.eldes.com
 
 ## Stack
 
