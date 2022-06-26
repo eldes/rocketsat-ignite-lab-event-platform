@@ -19,7 +19,7 @@ const EventPage = () => {
         ) : (
           <div className='flex-1 pt-[40vh] text-gray-300 text-xl'>
             <span className='flex flex-row items-center justify-center gap-2'>
-              Escolha algum dos conteúdos liberados
+              Escolha um conteúdo para começar
               <ArrowCircleRight size={24} weight="light" className='animate-pulse text-blue-500' />
             </span>
             
