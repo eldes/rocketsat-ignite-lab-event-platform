@@ -1,6 +1,7 @@
 import { gql, useMutation } from '@apollo/client';
 import { Warning } from 'phosphor-react';
-import { FormEventHandler, FunctionComponent, useState } from 'react';
+import { FormEventHandler, FunctionComponent, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import codeMockupImage from '../../assets/code-mockup.png';
 import Logo from '../../components/Logo';
@@ -34,11 +35,14 @@ const SubscribePage: FunctionComponent = function () {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  const [ createSubscriber, { loading: loadingCreateSubscriber, error: errorCreateSubscriber } ] = useMutation<CreateSubscribeMutationResponse>(CREATE_SUBSCRIBER_MUTATION);
+  const [ createSubscriber, { loading: loadingCreateSubscriber, error: errorCreateSubscriber, data } ] = useMutation<CreateSubscribeMutationResponse>(CREATE_SUBSCRIBER_MUTATION);
   const [ publishSubscriber, { loading: loadingPublishSubscriber, error: errorPublishSubscriber } ] = useMutation(PUBLISH_SUBSCRIBER_MUTATION);
 
   const handleSubscribe:FormEventHandler<HTMLFormElement> = function (event) {
     event.preventDefault();
+    toast('Processando sua inscrição', {
+      style: { backgroundColor: 'rgb(0, 135, 95)' }
+    })
     createSubscriber({
       variables: {
         name,
@@ -53,9 +57,19 @@ const SubscribePage: FunctionComponent = function () {
         }
       })
       .then(function () {
+        toast('Inscrição realizada!', { style: { backgroundColor: 'rgb(129, 216, 247)' } });
         navigate('/event');
+      })
+      .catch(() => {
+        toast('Ocorreu um erro ao processar sua inscrição', {
+          style: { backgroundColor: 'rgb(234, 179, 8)' }
+        })
       });
-      
+    })
+    .catch(() => {
+      toast('Ocorreu um erro ao processar sua inscrição', {
+        style: { backgroundColor: 'rgb(234, 179, 8)' }
+      })
     });
   };
 
