@@ -1,32 +1,10 @@
-import { gql, useMutation } from '@apollo/client';
 import { Warning } from 'phosphor-react';
-import { FormEventHandler, FunctionComponent, useEffect, useState } from 'react';
+import { FormEventHandler, FunctionComponent, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import codeMockupImage from '../../assets/code-mockup.png';
 import Logo from '../../components/Logo';
-
-const CREATE_SUBSCRIBER_MUTATION = gql`
-  mutation CreateSubscriber($name: String!, $email: String!) {
-    createSubscriber(data: {name: $name, email: $email}) {
-      id
-    }
-  }
-`;
-
-const PUBLISH_SUBSCRIBER_MUTATION = gql`
-  mutation PublishSubscriber($id:ID!) {
-    publishSubscriber(where: {id: $id}) {
-      id
-    }
-  }
-`;
-
-type CreateSubscribeMutationResponse = {
-  createSubscriber: {
-    id: string,
-  },
-};
+import { useCreateSubscriberMutation, usePublishSubscriberMutation } from '../../graphql/generated';
 
 const SubscribePage: FunctionComponent = function () {
 
@@ -35,8 +13,8 @@ const SubscribePage: FunctionComponent = function () {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  const [ createSubscriber, { loading: loadingCreateSubscriber, error: errorCreateSubscriber, data } ] = useMutation<CreateSubscribeMutationResponse>(CREATE_SUBSCRIBER_MUTATION);
-  const [ publishSubscriber, { loading: loadingPublishSubscriber, error: errorPublishSubscriber } ] = useMutation(PUBLISH_SUBSCRIBER_MUTATION);
+  const [ createSubscriber, { loading: loadingCreateSubscriber, error: errorCreateSubscriber, data } ] = useCreateSubscriberMutation();
+  const [ publishSubscriber, { loading: loadingPublishSubscriber, error: errorPublishSubscriber } ] = usePublishSubscriberMutation();
 
   const handleSubscribe:FormEventHandler<HTMLFormElement> = function (event) {
     event.preventDefault();
@@ -50,21 +28,27 @@ const SubscribePage: FunctionComponent = function () {
       }
     })
     .then(function (response) {
-      const id = response.data?.createSubscriber.id
-      publishSubscriber({
-        variables: {
-          id
-        }
-      })
-      .then(function () {
-        toast('Inscrição realizada!', { style: { backgroundColor: 'rgb(129, 216, 247)' } });
-        navigate('/event');
-      })
-      .catch(() => {
+      const id = response.data?.createSubscriber?.id
+      if (id) {
+        publishSubscriber({
+          variables: {
+            id
+          }
+        })
+        .then(function () {
+          toast('Inscrição realizada!', { style: { backgroundColor: 'rgb(129, 216, 247)' } });
+          navigate('/event');
+        })
+        .catch(() => {
+          toast('Ocorreu um erro ao processar sua inscrição', {
+            style: { backgroundColor: 'rgb(234, 179, 8)' }
+          })
+        });
+      } else {
         toast('Ocorreu um erro ao processar sua inscrição', {
           style: { backgroundColor: 'rgb(234, 179, 8)' }
         })
-      });
+      }
     })
     .catch(() => {
       toast('Ocorreu um erro ao processar sua inscrição', {

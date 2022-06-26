@@ -1,25 +1,8 @@
-import { gql, useQuery } from '@apollo/client';
-import Lesson, { GCMSLesson, LessonType } from '../../models/Lesson';
+import { useGetLessonsQuery } from '../../graphql/generated';
 import LessonBox from '../LessonBox';
 
-const GET_LESSONS_QUERY = gql`
-  query {
-    lessons(orderBy: availableAt_ASC, stage: PUBLISHED) {
-      title
-      slug
-      id
-      lessonType
-      availableAt
-    }
-  }
-`;
-
-type GetLessonsQueryResponse = {
-  lessons: GCMSLesson[] 
-};
-
 const Sidebar = () => {
-  const { data } = useQuery<GetLessonsQueryResponse>(GET_LESSONS_QUERY);
+  const { data } = useGetLessonsQuery();
   
   return (
     <aside className='w-[348px] bg-gray-700 p-6 border-l border-gray-600'>
@@ -27,8 +10,14 @@ const Sidebar = () => {
         Cronograma de aulas
       </span>
       <div className='flex flex-col gap-8'>
-        {data?.lessons?.map(gcmsLesson =>
-          <LessonBox key={gcmsLesson.id} lesson={new Lesson(gcmsLesson)}/>
+        {data?.lessons?.map(lesson =>
+          <LessonBox
+            key={lesson.id}
+            slug={lesson.slug}
+            title={lesson.title}
+            availableAt={new Date(lesson.availableAt)}
+            lessonType={lesson.lessonType}
+          />
         )}
       </div>
     </aside>

@@ -5,26 +5,29 @@ import { CheckCircle, Lock } from 'phosphor-react';
 import { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import Lesson, { LessonType } from '../../models/Lesson';
+import { LessonType } from '../../models/Lesson';
 
 type Props = {
-  lesson: Lesson;
+  slug: string;
+  title: string;
+  availableAt: Date;
+  lessonType: LessonType;
 };
 
 type Params = {
   slug: string;
 };
 
-const LessonBox:FunctionComponent<Props> = ({lesson}) => {
+const LessonBox:FunctionComponent<Props> = (props) => {
 
   const { slug } = useParams<Params>();
-  const isLessonAvailable = isPast(lesson.availableAt);
-  const isActiveLesson = (slug === lesson.slug);
+  const isLessonAvailable = isPast(props.availableAt);
+  const isActiveLesson = (slug === props.slug);
   
   return (
-    <Link to={`/event/lessons/${lesson.slug}`} className='group'>
+    <Link to={`/event/lessons/${props.slug}`} className='group'>
       <span className='text-gray-300'>
-        {format(lesson.availableAt, "EEEE '•' d 'de' MMMM '•' k'h'mm", {locale: ptBR})}
+        {format(props.availableAt, "EEEE '•' d 'de' MMMM '•' k'h'mm", {locale: ptBR})}
       </span>
       <div className={classNames('rounded border border-gray-500 p-4 mt-2 group-hover:border-green-500', {
         'bg-green-500': isActiveLesson,
@@ -52,14 +55,14 @@ const LessonBox:FunctionComponent<Props> = ({lesson}) => {
             'border-white': isActiveLesson,
             'border-green-300': !isActiveLesson
           })}>
-            {lesson.lessonType === LessonType.Live ? 'ao vivo' : 'aula prática'}
+            {props.lessonType === LessonType.Live ? 'ao vivo' : 'aula prática'}
           </span>
         </header>
         <strong className={classNames('block mt-5', {
           'text-white': isActiveLesson,
           'text-gray-200': !isActiveLesson,
         })}>
-          {lesson.title}
+          {props.title}
         </strong>
       </div>
     </Link>
