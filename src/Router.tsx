@@ -6,15 +6,12 @@ import SubscribePage from './pages/Subscribe';
 
 const Router: FunctionComponent = function () {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path={'/'} element={<SubscribePage />} />
-        <Route path={'/event'} element={<EventPage />} />
-        <Route path={'/event/lessons/:slug'} element={<EventPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path={'/'} element={<SubscribePage />} />
+      <Route path={'/event'} element={<EventPage />} />
+      <Route path={'/event/lessons/:slug'} element={<EventPage />} />
+    </Routes>
   );
 };
-
 
 export default Router;
